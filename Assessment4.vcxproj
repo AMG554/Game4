@@ -145,6 +145,9 @@
     <ClInclude Include="textpixels.h" />
     <ClInclude Include="textpixels_enums.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="InputFile.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

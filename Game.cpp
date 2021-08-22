@@ -4,6 +4,7 @@
 #include "textpixels.h"
 #include "textpixels_enums.h"
 #include <Windows.h>
+#include <fstream> //file reading/writing stuff
 
 using namespace textpixels;
 using namespace std;
@@ -13,10 +14,12 @@ char space[3][3] = { {'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'} };
 int row;
 int column;
 char token = 'X';
-bool tie = false;
+bool draw;
 string n1 = " ";
 string n2 = " ";
 int digit;
+int scoreX[1] = { 0 };
+int scoreO[1] = { 0 };
 
 const int LEVEL_WIDTH = 35;
 const int LEVEL_HEIGHT = 15;
@@ -167,14 +170,15 @@ void functionTwo()
 
 }
 
-bool functionThree(bool tie)
+bool functionThree()
 {
-	tie = true;
+
 	for (int i = 0; i < 3; i++)
 	{
-		if (space[i][0] == space[i][1] && space[i][0] == space[i][2] || space[0][i] == space[1][i] && space[0][i] == space[i][2])
+		if (space[i][0] == space[i][1] && space[i][0] == space[i][2] || space[0][i] == space[1][i] && space[0][i] == space[2][i])
 			return true;
 	}
+
 	if (space[0][0] == space[1][1] && space[1][1] == space[2][2] || space[0][2] == space[1][1] && space[1][1] == space[2][0])
 	{
 		return true;
@@ -190,15 +194,16 @@ bool functionThree(bool tie)
 			}
 		}
 	}
+	draw = true;
 }
-int main(bool tie)
+
+int main()
 {
-	// textpixels creates our 30x30 console window
+	bool playerHasQuit = true;
+	//textpixels creates our 30x30 console window
 	textpixels::setupConsole(LEVEL_WIDTH, LEVEL_HEIGHT + GUI_HEIGHT, 15, 15);
-	// 'screen' as a term for the Menu screen
+	//'screen' as a term for the Menu screen
 	int screen = Screen::MENU;    // Start the game at the menu.
-	int scoreX = 0;
-	int scoreO = 0;
 
 	while (screen != Screen::EXIT)   // Outermost loop of the whole program
 	{
@@ -209,35 +214,37 @@ int main(bool tie)
 		else if (screen == Screen::SCORE)
 		{
 			system("cls");
-			cout << "X won " << scoreX << " times" << endl;
-			cout << "O won " << scoreO << " times" << endl;
+			cout << "X won " << scoreX[0] << " times" << endl;
+			cout << "O won " << scoreO[0] << " times" << endl;
 		}
 		else if (screen == Screen::PLAY)
 		{
 			system("cls");
-			cout << " Enter name. Player 1 : " << endl;
+			cout << "Enter name. Player 1 : " << endl;
 			cin >> n1;
-			cout << " Enter name. Player 2 : " << endl;
+			cout << "Enter name. Player 2 : " << endl;
 			cin >> n2;
+
 			cout << n1 << " make the first play. " << endl;
 			cout << n2 << " make the second play. " << endl;
 			Sleep(1000);
-			while (!functionThree(tie))
+
+			while (!functionThree())
 			{
 				functionOne();
 				functionTwo();
-				functionThree(tie);
+				functionThree();
 			}
-			if (token == 'X' && tie == false)
+			if (token == 'X' && draw == false)
 			{
 				cout << n2 << "Wins!!" << endl;
-				scoreX += 1;
+				scoreO[1] += 1;
 				break;
 			}
-			else if (token == 'O' && tie == false)
+			else if (token == 'O' && draw == false)
 			{
 				cout << n1 << "Wins!!" << endl;
-				scoreO += 1;
+				scoreO[1] += 1;
 				break;
 			}
 			else
@@ -248,4 +255,3 @@ int main(bool tie)
 		}
 	}
 }
-

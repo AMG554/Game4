@@ -23,7 +23,7 @@ int scoreO[1] = { 0 };
 
 
 //setting up menu window with Txtpixels
-const int LEVEL_WIDTH = 35;
+const int LEVEL_WIDTH = 45;
 const int LEVEL_HEIGHT = 15;
 const int GUI_HEIGHT = 10;
 const int WALL_LEFT = 0;                                     // constant 'variables'
@@ -53,7 +53,7 @@ int displayMenuScreen()
 		textpixels::startFrame();   // Needed always at start of game loop
 		fillWindow(FG_DARK_BLUE);
 		fillRect(1, 1, LEVEL_WIDTH - 2, LEVEL_HEIGHT + 8, FG_BLACK);
-		drawString(5, 5, "(P) PLAY TicTacToe!", layerColours(FG_WHITE, BG_DARK_MAGENTA));
+		drawString(5, 6, "(P) PLAY TicTacToe!", layerColours(FG_BLACK, BG_WHITE));
 		drawString(5, 8, "(X) Exit", layerColours(FG_BLACK, BG_WHITE));
 		drawString(5, 10, "(S) Scoreboard", layerColours(FG_BLACK, BG_WHITE));
 
@@ -82,6 +82,7 @@ int displayMenuScreen()
 void functionOne()
 {
 	system("cls");
+	cout << "Enter a number from 1-9 inclusive, to replace with X or O" << endl;
 	cout << "   |   |   " << endl;
 	cout << " " << space[0][0] << " " << "|" << " " << space[0][1] << " " << "|" << " " << space[0][2] << " " << endl;
 	cout << "___|___|___" << endl;
@@ -100,12 +101,12 @@ void functionTwo()
 
 	if (token == 'X')
 	{
-		cout << n1 << " Enter";
+		cout << n1 << " Enter: ";
 		cin >> digit;
 	}
 	if (token == 'O')
 	{
-		cout << n2 << " Enter";
+		cout << n2 << " Enter: ";
 		cin >> digit;
 	}
 
@@ -218,6 +219,8 @@ int main()
 	//'screen' as a term for the Menu screen
 	int screen = Screen::MENU;    // Start the game at the menu.
 
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
 	while (screen != Screen::EXIT)   // Outermost loop of the whole program
 	{
 		if (screen == Screen::MENU)
@@ -252,21 +255,47 @@ int main()
 			//scoreO and scoreX were meant to be on the scoreboard but varaibles are not stored after program ends
 			if (token == 'X' && draw == false)
 			{
-				cout << n2 << "Wins!!" << endl;
+				cout << n2 << " Wins!! " << endl;
 				scoreO[1] += 1;
+				std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+				std::cout << "Game Duration = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
 				break;
 			}
 			else if (token == 'O' && draw == false)
 			{
-				cout << n1 << "Wins!!" << endl;
+				cout << n1 << " Wins!! " << endl;
 				scoreO[1] += 1;
+				std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+				std::cout << "Game Duration = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
 				break;
 			}
 			else
 			{
 				cout << "It's a draw" << endl;
+				std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+				std::cout << "Game duration = " << std::chrono::duration_cast<std::chrono::seconds>(end - begin).count() << "[s]" << std::endl;
 				break;
 			}
+			
 		}
 	}
 }
+
+//GIVES US ERRORS WHEN WE PUT IT IN THE INT MAIN() 
+//bool playerHasQuit = false
+//bool playAgain = PLAYAGAIN;
+//do
+//{
+//	textpixels::startFrame();
+//	// Play again to main menu
+//	if (keyIsDown('U'))
+//	{
+//		playAgain = true;
+//		break;
+//	}
+//	// Quit to main menu
+//	if (keyIsDown('Q'))
+//	{
+//		playerHasQuit = true;
+//		break;  // End the DO loop now, go to the line after it ends (return score?)
+//	}

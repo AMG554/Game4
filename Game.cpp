@@ -1,26 +1,28 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING // Needed with c++17
 #include <iostream>
 #include <string>
-#include "textpixels.h"
+#include "textpixels.h" // for main menu
 #include "textpixels_enums.h"
 #include <Windows.h>
-#include <fstream> //file reading/writing stuff
+#include <fstream> //file reading/writing stuff//didnt use it
 
 using namespace textpixels;
 using namespace std;
 
 
-char space[3][3] = { {'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'} };
+char space[3][3] = { {'1', '2', '3'}, {'4', '5', '6'}, {'7', '8', '9'} }; //creating a grid for the tictactoe slots
 int row;
 int column;
 char token = 'X';
 bool draw;
-string n1 = " ";
+string n1 = " "; //Player names
 string n2 = " ";
 int digit;
-int scoreX[1] = { 0 };
+int scoreX[1] = { 0 }; //For scores
 int scoreO[1] = { 0 };
 
+
+//setting up menu window with Txtpixels
 const int LEVEL_WIDTH = 35;
 const int LEVEL_HEIGHT = 15;
 const int GUI_HEIGHT = 10;
@@ -29,41 +31,43 @@ const int WALL_RIGHT = LEVEL_WIDTH - 1;
 const int WALL_TOP = 0;
 const int WALL_BOTTOM = LEVEL_HEIGHT - 1;
 
+//Main menu enum
 enum Screen
 {
 	MENU = 1,
 	PLAY,
 	SCORE,
-	PAUSE,
-	GAMEOVER,
 	EXIT,
 	NONE
 };
 
-
+//display menu using textpixels
 int displayMenuScreen()
 {
-	// 60fps is plenty fast for a menu.
+	// setting up menu
 	textpixels::setFps(60);
 	int choice = Screen::NONE;
 	do                            // Keeps looping, waiting for input
 	{
+		//player options from main menu
 		textpixels::startFrame();   // Needed always at start of game loop
 		fillWindow(FG_DARK_BLUE);
 		fillRect(1, 1, LEVEL_WIDTH - 2, LEVEL_HEIGHT + 8, FG_BLACK);
-		drawString(5, 5, "(P) PLAY Snake!", layerColours(FG_WHITE, BG_DARK_MAGENTA));
-		drawString(5, 8, "(X) exit", layerColours(FG_BLACK, BG_WHITE));
+		drawString(5, 5, "(P) PLAY TicTacToe!", layerColours(FG_WHITE, BG_DARK_MAGENTA));
+		drawString(5, 8, "(X) Exit", layerColours(FG_BLACK, BG_WHITE));
 		drawString(5, 10, "(S) Scoreboard", layerColours(FG_BLACK, BG_WHITE));
 
-
+		//Play button
 		if (keyIsDown('P'))
 		{
 			choice = Screen::PLAY;
 		}
+		//exit button
 		else if (keyIsDown('X'))
 		{
 			choice = Screen::EXIT;
 		}
+		//Scoreboard Button
 		else if (keyIsDown('S'))
 		{
 			choice = Screen::SCORE;
@@ -72,6 +76,9 @@ int displayMenuScreen()
 	} while (choice == Screen::NONE);     // Only stop when playerHasQuit  
 	return(choice);
 }
+
+//Setting the cout for the tictacttoe grid
+//this will be looped through repeatedly to add X and O s
 void functionOne()
 {
 	system("cls");
@@ -86,6 +93,8 @@ void functionOne()
 	cout << "   |   |   " << endl;
 }
 
+//assigns values 1-9 inclusive to a slot in tictactoe
+//replaces the number slots with X and O
 void functionTwo()
 {
 
@@ -145,12 +154,13 @@ void functionTwo()
 		row = 2;
 		column = 2;
 	}
+	//setting errors with player input
 	else if (digit < 1 && digit >9)
 	{
 		cout << "Invalid !! " << endl;
 	}
 
-	if (token == 'X' && space[row][column] != 'x' && space[row][column] != 'O')
+	if (token == 'X' && space[row][column] != 'X' && space[row][column] != 'O')
 	{
 		space[row][column] = 'X';
 		token = 'O';
@@ -165,11 +175,12 @@ void functionTwo()
 		cout << "There is no empty space!" << endl;
 		functionTwo();
 	}
-
+	//calling the grid of tictacttoe again after each turn
 	functionOne();
 
 }
 
+//setting conditions for win and draw situations using bool 
 bool functionThree()
 {
 
@@ -197,6 +208,8 @@ bool functionThree()
 	draw = true;
 }
 
+//Main function loops through all the parts using wile loop
+//includes menu screen, game and player name
 int main()
 {
 	bool playerHasQuit = true;
@@ -235,6 +248,8 @@ int main()
 				functionTwo();
 				functionThree();
 			}
+			//if loops break while loop after game ends
+			//scoreO and scoreX were meant to be on the scoreboard but varaibles are not stored after program ends
 			if (token == 'X' && draw == false)
 			{
 				cout << n2 << "Wins!!" << endl;
